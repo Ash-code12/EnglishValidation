@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "../config/env.js";
+import FormData from "form-data";
 
 class WhatsAppClient {
   async sendMessage(to, body, messageId) {
@@ -76,50 +77,29 @@ class WhatsAppClient {
     }
   }
 
-  async sendMediaMessage(to, type, mediaUrl, caption) {
+  async sendMediaMessage(to, type, mediaId) {
     try {
-      const mediaObject = {};
-      switch (type) {
-        case `image`:
-          mediaObject.image = { link: mediaUrl, caption: caption };
-          break;
-        case `audio`:
-          mediaObject.audio = { link: mediaUrl };
-          break;
-        case `video`:
-          mediaObject.video = { link: mediaUrl, caption: caption };
-          break;
-        case `document`:
-          mediaObject.document = {
-            link: mediaUrl,
-            caption: caption,
-            filename: `Name file`,
-          };
-          break;
-
-        default:
-          throw new Error(`not supported Media Type`);
-      }
-      await axios({
-        method: "POST",
-        url: `https://graph.facebook.com/${config.API_VERSION}/${config.BUSINESS_PHONE}/messages`,
+      // 2️⃣ Enviar el audio al destinatario
+    const sendRes = await axios.post(
+      `https://graph.facebook.com/${config.API_VERSION}/${config.BUSINESS_PHONE}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to: to,
+        type: type,
+        audio: { id: mediaId },
+      },
+      {
         headers: {
           Authorization: `Bearer ${config.API_TOKEN}`,
           "Content-Type": "application/json",
         },
-        data: {
-          messaging_product: "whatsapp",
-          to,
-          type: type,
-          ...mediaObject
-        },
-      });
-
-
+      } 
+    );
     } catch (error) {
-      console.error(`${error}  error sending media`);
+      console.error("❌ Error al enviar mensaje de audio:", error);
     }
   }
+
   async getMediaUrl(mediaId) {
     try {
       const response = await axios({
@@ -135,6 +115,28 @@ class WhatsAppClient {
       throw error;
     }
   }
-}
+  async uploadMedia(mediaStream, mediaType) {
+    try {
+      const formData = new FormData();
+      formData.append("file", mediaStream);
+      formData.append("type", mediaType);
+      formData.append("messaging_product", "whatsapp");
 
+      const response = await axios({
+        method: "POST",
+        url: `https://graph.facebook.com/${config.API_VERSION}/${config.BUSINESS_PHONE}/media`,
+        headers: {
+          Authorization: `Bearer ${config.API_TOKEN}`,
+          ...formData.getHeaders(),
+        },
+        data: formData,
+      });
+      console.log("✅ Media uploaded successfully:", response.data);
+      return response.data.id;
+    } catch (error) {
+      console.error("Error uploading media:", error);
+      throw error;
+    }
+  }
+}
 export default new WhatsAppClient();

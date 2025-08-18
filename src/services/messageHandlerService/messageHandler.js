@@ -5,6 +5,7 @@ import { STATES } from "../../utils/conversationState.js";
 import sessionTracker from "../../utils/sessionTracker.js";
 import config from "../../config/env.js";
 import n8nClient from "../../clients/n8nClient.js";
+import fs from "fs";
 
 class MessageHandler {
   // El controlador envia todos los mensajes a esta  funcion.
@@ -112,7 +113,7 @@ class MessageHandler {
     sessionTracker.updateSessionData(from, { jobPosition });
     const payload = sessionTracker.getSessionData(from);
     console.log("📦 Datos recopilados del usuario:", payload);
-    await this.requestForSharePointValidation(from, payload);
+    // await this.requestForSharePointValidation(from, payload);
     await whatsappClient.sendMessage(from, "Perfect! thanks", messageId);
     await this.infoDetails(from, messageId);
     await this.askQuestion_1(from, messageId);
@@ -277,11 +278,17 @@ If the use of such tools is detected, your test will be canceled and you will be
       "🎧 Alright, let’s break the ice with a quick riddle. Can you guess the answer?",
       messageId
     );
-    await whatsappClient.sendMessage(
-      to,
-      "Audio",
-      messageId
-    );
+    const audioId = await whatsappClient.uploadMedia(await this.getAudioStream("./src/assets/audios/audio1.mp3"), "audio/mp3");
+    await whatsappClient.sendMediaMessage(to, "audio", audioId,"");
+  }
+
+  async getAudioStream(audioFileRoute) {
+    try {
+      return fs.createReadStream(audioFileRoute);
+    } catch (error) {
+      console.error("Error al obtener el audio:", error);
+      throw error;
+    }
   }
 
   async askQuestion_2(to, messageId) {
