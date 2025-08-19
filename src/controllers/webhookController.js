@@ -26,8 +26,6 @@ class WebhookController {
 
     res.sendStatus(200);
   }
-
-
   verifyWebhook(req, res) {
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
@@ -37,7 +35,8 @@ class WebhookController {
       res.status(200).send(challenge);
       console.log('Webhook verified successfully!');
     } else {
-      res.sendStatus(403);
+      console.log('Webhook verification failed.');
+      res.sendStatus(200).send("Esto está raro");
     }
   }
 }
