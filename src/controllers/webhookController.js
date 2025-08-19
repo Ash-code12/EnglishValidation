@@ -36,7 +36,7 @@ class WebhookController {
       console.log('Webhook verified successfully!');
     } else {
       console.log('Webhook verification failed.');
-      return res.status(403).send(`Token recibido: ${token} y el token guardado es: ${config.WEBHOOK_VERIFY_TOKEN}`);
+      return res.status(403);
     }
   }
 }
