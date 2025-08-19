@@ -1,3 +1,5 @@
+import config  from "../config/env.js";
+
 class SessionTracker {
   constructor() {
     // Mapea wa_id -> step actual
@@ -6,7 +8,7 @@ class SessionTracker {
 
   // Guarda o actualiza el paso actual para un usuario
   addSession(wa_id, step) {
-    this.sessions.set(wa_id, { step, data: {} });
+    this.sessions.set(wa_id, { step, data: {}, startTime: Date.now(), processedMessages: [] });
     console.log(`🆕 Sesión iniciada: ${wa_id} en paso ${step}`);
   }
 
@@ -68,6 +70,46 @@ class SessionTracker {
   // Solo para debugging
   listSessions() {
     return Array.from(this.sessions.entries());
+  }
+
+  // Gestión de vida de la sesión
+  isSessionLifeCycleEnded(wa_id) {
+    // implementa la lógica para gestionar la vida de la sesión
+    const session = this.sessions.get(wa_id);
+    if (!session) {
+      console.warn(`⚠️ No existe sesión activa para: ${wa_id}`);
+    } else {
+      // Si la sesión existe, verificar si ya se cumplio su ciclo de vida
+      const currentTime = Date.now();
+      const sessionStartTime = session.startTime || currentTime;
+      const sessionDuration = currentTime - sessionStartTime;
+
+      if (sessionDuration > config.SESSION_LIFETIME) {
+        console.warn(`⚠️ La sesión ha expirado para: ${wa_id}`);
+        return true;
+      } else {
+        console.log(`🔄 La sesión está activa para: ${wa_id}`);
+        return false;
+      }
+    }
+  }
+  addProcessedMessage(wa_id, messageId) {
+    const session = this.sessions.get(wa_id);
+    if (session) {
+      session.processedMessages.push(messageId);
+      console.log(`✅ Mensaje procesado agregado para ${wa_id}: ${messageId}`);
+    } else {
+      console.warn(`⚠️ No existe sesión activa para: ${wa_id}`);
+    }
+  }
+  messageWasProcessed(wa_id, message) {
+    const session = this.sessions.get(wa_id);
+    // 1. Si el mensaje es demasiado viejo, lo consideramos procesado
+    const isExpired = message.timestamp*1000 < Date.now() - config.SESSION_LIFETIME;
+    if (isExpired) return true;
+
+    // 2. Si hay sesión, revisamos si ya está en la lista de procesados
+    return session?.processedMessages.includes(message.id) ?? false;
   }
 }
 

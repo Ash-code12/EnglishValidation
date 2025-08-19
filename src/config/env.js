@@ -21,8 +21,7 @@ export default {
   SUPABASE_URL: process.env.SUPABASE_URL,
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
 
-  
-  PalabraSecreta:process.env.PalabraSecreta
-
+  PalabraSecreta:process.env.PalabraSecreta,
+  SESSION_LIFETIME: process.env.SESSION_LIFETIME
 
 };

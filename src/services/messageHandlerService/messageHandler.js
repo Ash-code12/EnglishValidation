@@ -1,5 +1,3 @@
-const processedMessages = new Set();
-
 import whatsappClient from "../../clients/whatsappClient.js";
 import { STATES } from "../../utils/conversationState.js";
 import sessionTracker from "../../utils/sessionTracker.js";
@@ -13,13 +11,10 @@ class MessageHandler {
     const messageId = message.id;
     const from = message.from;
     //Buscamos y retemos  duplicados por que  el Whatsapp al no recibir respuesta de n8n inmediata  tiende a re enviar el mismo mensaje
-    if (processedMessages.has(messageId)) {
+    if (sessionTracker.messageWasProcessed(from, message)) {
       console.log("⚠️ Mensaje duplicado ignorado:", messageId);
       return;
     }
-    // despues de 5 minutos   eliminamos mensajes
-    processedMessages.add(messageId);
-    setTimeout(() => processedMessages.delete(messageId), 5 * 60 * 1000);
     
     let currentStep = sessionTracker.getSessionStep(from);
     if (!currentStep) {
@@ -27,6 +22,12 @@ class MessageHandler {
       sessionTracker.addSession(from, STATES.INITIAL);
       currentStep = STATES.INITIAL;
     }
+    if(sessionTracker.isSessionLifeCycleEnded(from)){
+      await whatsappClient.sendMessage(from, "❌ The session has expired. You need to start a new session.", messageId);
+      sessionTracker.removeSession(from);
+      return; 
+    }
+    sessionTracker.addProcessedMessage(from, messageId);
 
     // Enrutamos el mensaje segun el estado actual
     try {
@@ -261,7 +262,7 @@ First, I have a few questions for you. Let's get started! 🚀`;
 🚫 Please refrain from using external tools such as AI, translators, or similar.
 If the use of such tools is detected, your test will be canceled and you will be removed from the selection process — we will notice.
 
-🕒 The maximum total duration of the test is 10 minutes. After this time, the bot will disconnect automatically.
+🕒 The maximum total duration of the test is ${config.SESSION_LIFETIME / 60000} minutes. After this time, the bot will disconnect automatically.
 
 💡 We suggest you answer in a way that allows us to assess you properly. Avoid just saying “yes” or “no” or giving very short answers, as that may negatively affect your evaluation.
 
