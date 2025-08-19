@@ -36,7 +36,7 @@ class WebhookController {
       console.log('Webhook verified successfully!');
     } else {
       console.log('Webhook verification failed.');
-      res.sendStatus(200).send("Esto está raro");
+      res.sendStatus(200).send(JSON.stringify({ TOKEN: config.WEBHOOK_VERIFY_TOKEN }));
     }
   }
 }
