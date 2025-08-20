@@ -114,7 +114,7 @@ class MessageHandler {
     sessionTracker.updateSessionData(from, { jobPosition });
     const payload = sessionTracker.getSessionData(from);
     console.log("📦 Datos recopilados del usuario:", payload);
-    // await this.requestForSharePointValidation(from, payload);
+    await this.requestForSharePointValidation(from, payload);
     await whatsappClient.sendMessage(from, "Perfect! thanks", messageId);
     await this.infoDetails(from, messageId);
     await this.askQuestion_1(from, messageId);
