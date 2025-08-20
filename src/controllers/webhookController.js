@@ -1,5 +1,6 @@
 import config from '../config/env.js';
-import messageHandler from '../services/messageHandlerService/messageHandler.js';
+// import messageHandler from '../services/messageHandlerService/messageHandler.js';
+import messageHandler from '../services/messageHandlerService/index.js';
 
 class WebhookController {
   async handleIncoming(req, res) {
@@ -21,7 +22,7 @@ class WebhookController {
     try {
       await messageHandler.handleIncomingMessage(message, senderInfo);
     } catch (error) {
-      console.error("❌ Error al procesar el mensaje:", error);
+      // console.error("❌ Error al procesar el mensaje:", error);
     }
 
     res.sendStatus(200);

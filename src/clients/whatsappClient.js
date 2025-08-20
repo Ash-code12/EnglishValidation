@@ -21,7 +21,8 @@ class WhatsAppClient {
         },
       });
     } catch (error) {
-      console.error("Error sending message:", error);
+      // console.error("Error sending message:", error);
+      throw error;
     }
   }
 
@@ -43,7 +44,8 @@ class WhatsAppClient {
 
       console.log(`✅ Mensaje ${messageId} marcado como leído`);
     } catch (error) {
-      console.error("❌ Error al marcar mensaje como leído:", error.response?.data || error.message);
+      // console.error("❌ Error al marcar mensaje como leído:", error.response?.data || error.message);
+      throw error;
     }
   }
 
@@ -70,10 +72,11 @@ class WhatsAppClient {
         },
       });
     } catch (error) {
-      console.error(
-        "❌ Error al enviar botones interactivos:",
-        error.response?.data || error.message
-      );
+      // console.error(
+      //   "❌ Error al enviar botones interactivos:",
+      //   error.response?.data || error.message
+      // );
+      throw error;
     }
   }
 
@@ -96,7 +99,8 @@ class WhatsAppClient {
       } 
     );
     } catch (error) {
-      console.error("❌ Error al enviar mensaje de audio:", error);
+      // console.error("❌ Error al enviar mensaje de audio:", error);
+      throw error;
     }
   }
 
@@ -111,7 +115,7 @@ class WhatsAppClient {
       });
       return response.data.url;
     } catch (error) {
-      console.error("Error fetching media URL:", error);
+      // console.error("Error fetching media URL:", error);
       throw error;
     }
   }
@@ -134,7 +138,7 @@ class WhatsAppClient {
       console.log("✅ Media uploaded successfully:", response.data);
       return response.data.id;
     } catch (error) {
-      console.error("Error uploading media:", error);
+      // console.error("Error uploading media:", error);
       throw error;
     }
   }

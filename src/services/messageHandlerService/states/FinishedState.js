@@ -1,20 +1,45 @@
 import BaseState from "./BaseState.js";
-import n8nSenderService from "../../../clients/n8nClient.js";
-import config from "../../../config/env.js";
 
 export default class FinishedState extends BaseState {
+  constructor({ whatsappClient, sessionTracker, n8nClient, config }) {
+    super({ whatsappClient, sessionTracker, n8nClient, config });
+  }
   async handle({ from, messageId }) {
-    const sessionData = this.sessionService.getData(from);
-    const payload = Object.keys(sessionData)
-      .filter(k => k.startsWith("question"))
-      .map(k => ({ [k]: sessionData[k] }));
+    try {
+      const questions = ["question1", "question2", "question3", "question4", "question5"];
+      const sessionData = this.sessionTracker.getSessionData(from, questions);
+      const payload = questions.map(q => ({ [q]: sessionData[q] }));
+      console.log("📦 Final answers:", payload);
 
-    console.log("📦 Final answers:", payload);
-    await n8nSenderService.send(config.N8N_WEBHOOK_SAVE_QUESTIONS, { wa_id: from, data: payload });
+      await this.requestForSaveQuestions(from, payload);
 
-    this.sessionService.remove(from);
+      this.sessionTracker.removeSession(from);
 
-    await this.whatsappService.sendMessage(from, "✅ Thank you! Your responses have been saved.", messageId);
-    await this.whatsappService.sendMessage(from, "🙌 Good luck with the process!", messageId);
+      await this.whatsappClient.sendMessage(from, "✅ Thank you! Your responses have been saved.", messageId);
+      await this.whatsappClient.sendMessage(from, "🙌 Good luck with the process!", messageId);
+    } catch (error) {
+      // console.error("❌ Error al finalizar el estado:", error);
+      throw error;
+    }
+
+  }
+
+  async requestForSaveQuestions(from, payload) {
+    console.log("📤 Enviando datos a SharePoint:", {
+      wa_id: from,
+      data: payload,
+    });
+    try {
+      await this.n8nClient.send(
+        this.config.N8N_WEBHOOK_SAVE_QUESTIONS,
+        {
+          wa_id: from,
+          data: payload,
+        },
+      );
+    } catch (error) {
+      // console.error("❌ Error al enviar datos a SharePoint:", error);
+      throw error;
+    }
   }
 }

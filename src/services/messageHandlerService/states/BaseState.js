@@ -29,7 +29,13 @@ export default class BaseState {
   }
 
   async validateFullName(fullName) {
-    const nameParts = fullName.split(" ");
+    const text = fullName.body;
+    if (typeof text !== "string") return false;
+    const nameParts = text
+      .trim()
+      .split(/\s+/) // divide por uno o más espacios
+      .filter(Boolean);
+
     return nameParts.length >= 2;
   }
 }
