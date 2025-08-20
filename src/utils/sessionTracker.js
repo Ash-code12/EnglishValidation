@@ -50,8 +50,12 @@ class SessionTracker {
   }
 
   // Obtiene los datos de la sesión del usuario
-  getSessionData(wa_id) {
+  getSessionData(wa_id, keys=[]) {
     const session = this.sessions.get(wa_id) || null;
+    if (keys.length > 0) {
+      // Si se proporcionan claves, filtrar los datos de la sesión
+      return session ? Object.fromEntries(Object.entries(session.data).filter(([key]) => keys.includes(key))) : null;
+    }
     return session ? session.data : null;
   }
 
