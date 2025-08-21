@@ -1,6 +1,7 @@
 import BaseState from "./BaseState.js";
 import { STATES } from "../../../utils/conversationState.js";
 import getStateHandler from "./stateFactory.js";
+import { getAudioStream } from "./../../../utils/getAudioStream.js"
 
 export default class QuestionState extends BaseState {
   constructor({ whatsappClient, sessionTracker, n8nClient, config, questionNumber, nextState }) {
