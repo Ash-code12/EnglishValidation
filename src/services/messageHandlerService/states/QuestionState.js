@@ -10,11 +10,11 @@ export default class QuestionState extends BaseState {
   }
 
   QUESTIONS = {
-    "QUESTION_1": "🎧 Alright, let’s break the ice with a quick riddle. Can you guess the answer?",
-    "QUESTION_2": "👵 Imagine your grandma asked you what your job is about. How would you explain it to her?",
-    "QUESTION_3": "🧠 If you had to mentor a junior in your area, what’s one concept you think they must understand well, and how would you explain it?",
-    "QUESTION_4": "🤼 Tell me about a time when you had to work with someone who had a different approach or opinion. How did you manage it?",
-    "QUESTION_5": "💻 Can you describe a tool or software you use often in your job, and explain what it’s used for, as if you were training a new teammate?"
+    "QUESTION_1": "./src/assets/audios/audio1.mp3",
+    "QUESTION_2": "./src/assets/audios/audio2.mp3",
+    "QUESTION_3": "./src/assets/audios/audio3.mp3",
+    "QUESTION_4": "./src/assets/audios/audio4.mp3",
+    "QUESTION_5": "./src/assets/audios/audio5.mp3"
   };
 
   async handle({ from, message, messageId }) {
@@ -30,7 +30,8 @@ export default class QuestionState extends BaseState {
       await this.sessionTracker.updateSessionData(from, { [`question${this.questionNumber}`]: audioUrl });
 
       if (this.nextState !== STATES.FINISHED) {
-        await this.whatsappClient.sendMessage(from, this.QUESTIONS[this.nextState], messageId);
+        const audioId = await this.whatsappClient.uploadMedia(await getAudioStream(this.QUESTIONS[this.nextState]), "audio/mp3");
+        await this.whatsappClient.sendMediaMessage(from, "audio", audioId, "");
         this.sessionTracker.updateSessionStep(from, this.nextState);
       } else {
         this.sessionTracker.updateSessionStep(from, this.nextState);

@@ -1,5 +1,4 @@
 import config from '../config/env.js';
-// import messageHandler from '../services/messageHandlerService/messageHandler.js';
 import messageHandler from '../services/messageHandlerService/index.js';
 
 class WebhookController {
@@ -22,12 +21,13 @@ class WebhookController {
     try {
       await messageHandler.handleIncomingMessage(message, senderInfo);
     } catch (error) {
-      // console.error("❌ Error al procesar el mensaje:", error);
+      console.error("❌ Error al procesar el mensaje:", error);
     }
 
     res.sendStatus(200);
   }
-  verifyWebhook(req, res) {
+
+  async verifyWebhook(req, res) {
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
     const challenge = req.query['hub.challenge'];
