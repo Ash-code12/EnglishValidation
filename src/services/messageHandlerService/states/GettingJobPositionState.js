@@ -54,7 +54,7 @@ If the use of such tools is detected, your test will be canceled and you will be
       // Update session step
       this.sessionTracker.updateSessionStep(from, this.nextState);
     } catch (error) {
-      // console.error("❌ Error al manejar el estado GettingJobPosition:", error);
+
       throw error;
     }
   }
@@ -73,7 +73,6 @@ If the use of such tools is detected, your test will be canceled and you will be
         },
       );
     } catch (error) {
-      // console.error("❌ Error al enviar datos a SharePoint:", error);
       throw error;
     }
   }
