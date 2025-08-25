@@ -38,4 +38,15 @@ export default class BaseState {
 
     return nameParts.length >= 2;
   }
+
+  async setAsyncSessionTimeout(from, timeoutDuration) {
+    setTimeout(() => {
+      this.whatsappClient.sendMessage(from, `⏳ Your session will expire in 3 minutes. Hurry up!`);
+    }, timeoutDuration - 3 * 60 * 1000);
+    setTimeout(() => {
+      this.sessionTracker.clearSession(from);
+    }, timeoutDuration);
+  }
+
+
 }

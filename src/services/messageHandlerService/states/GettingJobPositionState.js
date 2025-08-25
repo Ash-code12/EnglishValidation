@@ -34,8 +34,8 @@ If the use of such tools is detected, your test will be canceled and you will be
 
       // Log user data
       const payload = this.sessionTracker.getSessionData(from, ["fullName", "recruiterName", "jobPosition"]);
-      console.log("📦 Datos recopilados del usuario:", payload);
-      await this.requestForSharePointValidation(from, payload);
+      // console.log("📦 Datos recopilados del usuario:", payload);
+      // await this.requestForSharePointValidation(from, payload);
 
       // Send confirmation messages
       await this.whatsappClient.sendMessage(from, "Perfect! Thanks!", messageId);

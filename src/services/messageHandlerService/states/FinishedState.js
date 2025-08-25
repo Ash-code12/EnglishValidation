@@ -6,7 +6,7 @@ export default class FinishedState extends BaseState {
   }
   async handle({ from, messageId }) {
     try {
-      const questions = ["question1", "question2", "question3", "question4", "question5"];
+      const questions = ["question1", "question2", "question3", "question4", "question5","fullName", "recruiterName", "jobPosition"];
       const sessionData = this.sessionTracker.getSessionData(from, questions);
       const payload = questions.map(q => ({ [q]: sessionData[q] }));
       console.log("📦 Final answers:", payload);
