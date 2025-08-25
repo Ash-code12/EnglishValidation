@@ -13,7 +13,7 @@ export default class FinishedState extends BaseState {
       const payload = questions.map(q => ({ [q]: sessionData[q] }));
       console.log("📦 Final answers:", payload);
 
-      await this.requestForSaveQuestions(from, payloadeee, info);
+      await this.requestForSaveQuestions(from, payload, info);
 
       this.sessionTracker.removeSession(from);
 
