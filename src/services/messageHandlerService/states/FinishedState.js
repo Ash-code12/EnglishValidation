@@ -38,10 +38,10 @@ export default class FinishedState extends BaseState {
         {
           wa_id: from,
           data: payload,
+          info: info
         },
       );
     } catch (error) {
-      // console.error("❌ Error al enviar datos a SharePoint:", error);
       throw error;
     }
   }
