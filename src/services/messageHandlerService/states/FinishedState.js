@@ -18,7 +18,6 @@ export default class FinishedState extends BaseState {
       await this.whatsappClient.sendMessage(from, "✅ Thank you! Your responses have been saved.", messageId);
       await this.whatsappClient.sendMessage(from, "🙌 Good luck with the process!", messageId);
     } catch (error) {
-      // console.error("❌ Error al finalizar el estado:", error);
       throw error;
     }
 
@@ -38,7 +37,6 @@ export default class FinishedState extends BaseState {
         },
       );
     } catch (error) {
-      // console.error("❌ Error al enviar datos a SharePoint:", error);
       throw error;
     }
   }

@@ -21,7 +21,6 @@ export default class GettingFullNameState extends BaseState {
       await this.whatsappClient.sendMessage(from, "🙋 Who is your recruiter at Softgic?", messageId);
       this.sessionTracker.updateSessionStep(from, this.nextState);
     } catch (error) {
-      // console.error("❌ Error al manejar el estado GettingFullName:", error);
       throw error;
     }
 

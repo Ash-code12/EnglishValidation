@@ -39,7 +39,6 @@ export default class QuestionState extends BaseState {
         await getStateHandler(this.sessionTracker.getSessionStep(from)).handle({ from, message, messageId });
       }
     } catch (error) {
-      // console.error("❌ Error al manejar el estado Question:", error);
       throw error;
     }
   }

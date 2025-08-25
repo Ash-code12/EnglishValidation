@@ -17,7 +17,6 @@ First, I have a few questions for you. Let's get started! 🚀`;
 
       this.sessionTracker.updateSessionStep(from, this.nextState);
     } catch (error) {
-      // console.error("❌ Error al manejar el estado Initial:", error);
       throw error;
     }
 

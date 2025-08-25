@@ -30,7 +30,6 @@ export default function getStateHandler(state) {
 
     return stateMap[state];
   } catch (error) {
-    // console.error("❌ Error al obtener el manejador de estado:", error);
     throw error;
   }
 }

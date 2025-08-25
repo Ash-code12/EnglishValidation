@@ -21,7 +21,6 @@ export default class GettingRecruiterNameState extends BaseState {
       await this.whatsappClient.sendMessage(from, "💼 What is the job position you are applying for?", messageId);
       this.sessionTracker.updateSessionStep(from, this.nextState);
     } catch (error) {
-      // console.error("❌ Error al manejar el estado GettingRecruiterName:", error);
       throw error;
     }
 
