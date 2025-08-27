@@ -25,7 +25,7 @@ export default class GettingFullNameState extends BaseState {
         from,                                     
         "Selecciona el nombre de tu reclutador",  // body
         "Desliza para ver más opciones",          // footer
-        "Ver reclutadores",                       // texto del botón
+        "Ver reclutadores",                       
         [
           {
             title: "Reclutadores",
