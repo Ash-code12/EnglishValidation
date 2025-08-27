@@ -14,7 +14,7 @@ First, I have a few questions for you. Let's get started! 🚀`;
 
       await this.whatsappClient.sendMessage(from, welcome, messageId);
       await this.whatsappClient.sendMessage(from, "📝 What is your full name?", messageId);
-
+      await this.setAsyncSessionTimeout(from);
       this.sessionTracker.updateSessionStep(from, this.nextState);
     } catch (error) {
       throw error;

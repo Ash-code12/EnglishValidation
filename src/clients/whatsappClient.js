@@ -72,10 +72,44 @@ class WhatsAppClient {
         },
       });
     } catch (error) {
-      // console.error(
-      //   "❌ Error al enviar botones interactivos:",
-      //   error.response?.data || error.message
-      // );
+      console.error(
+        "❌ Error al enviar botones interactivos:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+  async sendInteractiveList(to, bodyText, footerText, buttonText, sections) {
+    try {
+      const data = {
+        messaging_product: "whatsapp",
+        to,
+        type: "interactive",
+        interactive: {
+          type: "list",
+          body: { text: bodyText },
+          footer: { text: footerText },
+          action: {
+            button: buttonText, // texto del botón que abre la lista
+            sections: sections, // array de secciones con rows
+          },
+        },
+      };
+      await axios.post(
+        `https://graph.facebook.com/${config.API_VERSION}/${config.BUSINESS_PHONE}/messages`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${config.API_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.error(
+        "❌ Error al enviar lista interactiva:",
+        error.response?.data || error.message
+      );
       throw error;
     }
   }
@@ -83,21 +117,21 @@ class WhatsAppClient {
   async sendMediaMessage(to, type, mediaId) {
     try {
       // 2️⃣ Enviar el audio al destinatario
-    const sendRes = await axios.post(
-      `https://graph.facebook.com/${config.API_VERSION}/${config.BUSINESS_PHONE}/messages`,
-      {
-        messaging_product: "whatsapp",
-        to: to,
-        type: type,
-        audio: { id: mediaId },
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${config.API_TOKEN}`,
-          "Content-Type": "application/json",
+      const sendRes = await axios.post(
+        `https://graph.facebook.com/${config.API_VERSION}/${config.BUSINESS_PHONE}/messages`,
+        {
+          messaging_product: "whatsapp",
+          to: to,
+          type: type,
+          audio: { id: mediaId },
         },
-      } 
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${config.API_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
     } catch (error) {
       // console.error("❌ Error al enviar mensaje de audio:", error);
       throw error;

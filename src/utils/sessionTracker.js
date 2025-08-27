@@ -1,6 +1,7 @@
 import config  from "../config/env.js";
 
 class SessionTracker {
+  static ONE_MINUTE = 60 * 1000;
   constructor() {
     // Mapea wa_id -> step actual
     this.sessions = new Map();
@@ -40,6 +41,9 @@ class SessionTracker {
 
   // Elimina la sesión de un usuario
   removeSession(wa_id) {
+    if (!this.isSessionActive(wa_id)){
+      return
+    }
     this.sessions.delete(wa_id);
     console.log(`🗑️ Sesión eliminada para: ${wa_id}`);
   }
@@ -88,7 +92,7 @@ class SessionTracker {
       const sessionStartTime = session.startTime || currentTime;
       const sessionDuration = currentTime - sessionStartTime;
 
-      if (sessionDuration > config.SESSION_LIFETIME) {
+      if (sessionDuration > config.SESSION_LIFETIME * SessionTracker.ONE_MINUTE) {
         console.warn(`⚠️ La sesión ha expirado para: ${wa_id}`);
         return true;
       } else {
@@ -109,7 +113,7 @@ class SessionTracker {
   messageWasProcessed(wa_id, message) {
     const session = this.sessions.get(wa_id);
     // 1. Si el mensaje es demasiado viejo, lo consideramos procesado
-    const isExpired = message.timestamp*1000 < Date.now() - config.SESSION_LIFETIME;
+    const isExpired = message.timestamp*1000 < Date.now() - config.SESSION_LIFETIME * SessionTracker.ONE_MINUTE;
     if (isExpired) return true;
 
     // 2. Si hay sesión, revisamos si ya está en la lista de procesados

@@ -29,7 +29,7 @@ If the use of such tools is detected, your test will be canceled and you will be
         await this.whatsappClient.sendMessage(from, "❌ Please, provide the job position you are applying for.", messageId);
         return;
       }
-      const jobPosition = await this.handleTextMessage(message.text);
+      const jobPosition = await this.handleTextMessage(message.text.body);
       this.sessionTracker.updateSessionData(from, { jobPosition });
 
       // Log user data
@@ -50,6 +50,7 @@ If the use of such tools is detected, your test will be canceled and you will be
       // Upload audio for next question
       const audioId = await this.whatsappClient.uploadMedia(await getAudioStream("./src/assets/audios/audio1.mp3"), "audio/mp3");
       await this.whatsappClient.sendMediaMessage(from, "audio", audioId, "");
+      await this.setAsyncQuestionsTimeout(from);
 
       // Update session step
       this.sessionTracker.updateSessionStep(from, this.nextState);

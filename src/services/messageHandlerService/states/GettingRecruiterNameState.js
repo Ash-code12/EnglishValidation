@@ -7,17 +7,19 @@ export default class GettingRecruiterNameState extends BaseState {
   }
   async handle({ from, message, messageId }) {
     try {
-      if (!message.text) {
+      console.log("Nombre reclutador:", message.interactive?.list_reply?.title);
+      if (!message.text && !message.interactive?.list_reply?.title) {
         await this.whatsappClient.sendMessage(from, "❌ Please, provide your recruiter's name.", messageId);
         return;
       }
-      if (!await this.validateFullName(message.text)) {
-        await this.whatsappClient.sendMessage(from, "❌ Please provide at least your recruiter's first name and last name.", messageId);
+      const recruiterName = message.text ? message.text.body : message.interactive?.list_reply?.title;
+      if (!this.validateRecruiterName(recruiterName)) {
+        await this.whatsappClient.sendMessage(from, "❌ Name you provided is not in our valid recruiters list.", messageId);
         return;
       }
-      const recruiterName = await this.handleTextMessage(message.text);
+      const recruiterNameNormalized = await this.handleTextMessage(recruiterName);
 
-      this.sessionTracker.updateSessionData(from, { recruiterName });
+      this.sessionTracker.updateSessionData(from, { recruiterName: recruiterNameNormalized });
       await this.whatsappClient.sendMessage(from, "💼 What is the job position you are applying for?", messageId);
       this.sessionTracker.updateSessionStep(from, this.nextState);
     } catch (error) {

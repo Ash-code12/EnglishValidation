@@ -15,10 +15,29 @@ export default class GettingFullNameState extends BaseState {
         await this.whatsappClient.sendMessage(from, "❌ Please provide at least your first name and last name.", messageId);
         return;
       }
-      const fullName = await this.handleTextMessage(message.text);
+      const fullName = await this.handleTextMessage(message.text.body);
 
+      
       this.sessionTracker.updateSessionData(from, { fullName });
       await this.whatsappClient.sendMessage(from, "🙋 Who is your recruiter at Softgic?", messageId);
+      const reclutadores = this.config.RECRUITERS;
+      await this.whatsappClient.sendInteractiveList(
+        from,                                     // número destino
+        "Selecciona el nombre de tu reclutador",  // body
+        "Desliza para ver más opciones",          // footer
+        "Ver reclutadores",                       // texto del botón
+        [
+          {
+            title: "Reclutadores",
+            rows: 
+              reclutadores.map((name, index) => ({
+                id: String(index + 1),
+                title: name
+              })),
+            
+          }
+        ]
+      );
       this.sessionTracker.updateSessionStep(from, this.nextState);
     } catch (error) {
       throw error;

@@ -23,6 +23,8 @@ export default {
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
 
   PalabraSecreta:process.env.PalabraSecreta,
-  SESSION_LIFETIME: process.env.SESSION_LIFETIME
-
+  SESSION_LIFETIME: process.env.SESSION_LIFETIME,
+  QUESTIONARY_TIMEOUT: process.env.QUESTIONARY_TIMEOUT,
+  REMINDER_BEFORE_TIMEOUT: process.env.REMINDER_BEFORE_TIMEOUT,
+  RECRUITERS: process.env.RECRUITERS ? process.env.RECRUITERS.split(',') : []
 };
