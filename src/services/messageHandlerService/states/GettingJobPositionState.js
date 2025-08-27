@@ -15,7 +15,7 @@ export default class GetJobPositionState extends BaseState {
 🚫 Please refrain from using external tools such as AI, translators, or similar.
 If the use of such tools is detected, your test will be canceled and you will be removed from the selection process — we will notice.
     
-🕒 The maximum total duration of the test is ${this.config.SESSION_LIFETIME / 60000} minutes. After this time, the bot will disconnect automatically.
+🕒 The maximum total duration of the test is ${this.config.QUESTIONARY_TIMEOUT} minutes. After this time, the bot will disconnect automatically.
     
 💡 We suggest you answer in a way that allows us to assess you properly. Avoid just saying “yes” or “no” or giving very short answers, as that may negatively affect your evaluation.
     
