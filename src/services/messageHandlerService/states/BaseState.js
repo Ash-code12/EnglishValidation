@@ -6,7 +6,8 @@ export default class BaseState {
     this.n8nClient = n8nClient;
     this.config = config;
   }
-
+  
+  #Prueba
   async handle() {
     throw new Error("Method 'handle()' must be implemented in subclass.");
   }
