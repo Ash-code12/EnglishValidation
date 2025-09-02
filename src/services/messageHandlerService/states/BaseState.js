@@ -57,7 +57,7 @@ export default class BaseState {
   async setAsyncSessionTimeout(from){
     setTimeout(async () => {
       await this.whatsappClient.sendMessage(from, `⏳ Your session has expired. Please start over.`);
-      await this.sessionTracker.removeSession(from);
+      this.sessionTracker.removeSession(from);
     }, this.config.SESSION_LIFETIME * BaseState.ONE_MINUTE);
   }
 }
