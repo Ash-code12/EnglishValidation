@@ -32,11 +32,6 @@ If the use of such tools is detected, your test will be canceled and you will be
       const jobPosition = await this.handleTextMessage(message.text.body);
       this.sessionTracker.updateSessionData(from, { jobPosition });
 
-      // Log user data
-      const payload = this.sessionTracker.getSessionData(from, ["fullName", "recruiterName", "jobPosition"]);
-      // console.log("📦 Datos recopilados del usuario:", payload);
-      // await this.requestForSharePointValidation(from, payload);
-
       // Send confirmation messages
       await this.whatsappClient.sendMessage(from, "Perfect! Thanks!", messageId);
 
@@ -50,7 +45,8 @@ If the use of such tools is detected, your test will be canceled and you will be
       // Upload audio for next question
       const audioId = await this.whatsappClient.uploadMedia(await getAudioStream("./src/assets/audios/audio1.mp3"), "audio/mp3");
       await this.whatsappClient.sendMediaMessage(from, "audio", audioId, "");
-      await this.setAsyncQuestionsTimeout(from);
+      const { questionsAlert, questionsTimeout } = await this.setAsyncQuestionsTimeout(from);
+      this.sessionTracker.updateSessionData(from, { questionsAlert, questionsTimeout });
 
       // Update session step
       this.sessionTracker.updateSessionStep(from, this.nextState);

@@ -1,4 +1,5 @@
 import config  from "../config/env.js";
+import {safeClearTimeout} from "../utils/safeClearTimeout.js";
 
 class SessionTracker {
   static ONE_MINUTE = 60 * 1000;
@@ -44,6 +45,8 @@ class SessionTracker {
     if (!this.isSessionActive(wa_id)){
       return
     }
+    const { questionsAlert, questionsTimeout, sessionTimeout } = this.getSessionData(wa_id, ["questionsAlert", "questionsTimeout", "sessionTimeout"])
+    safeClearTimeout(questionsAlert, questionsTimeout, sessionTimeout);
     this.sessions.delete(wa_id);
     console.log(`🗑️ Sesión eliminada para: ${wa_id}`);
   }

@@ -22,13 +22,13 @@ export default class GettingFullNameState extends BaseState {
       await this.whatsappClient.sendMessage(from, "🙋 Who is your recruiter at Softgic?", messageId);
       const reclutadores = this.config.RECRUITERS;
       await this.whatsappClient.sendInteractiveList(
-        from,                                     
-        "Selecciona el nombre de tu reclutador",  // body
-        "Desliza para ver más opciones",          // footer
-        "Ver reclutadores",                       
+        from,
+        "Select your recruiter",
+        "Swipe to see more options",
+        "View recruiters",
         [
           {
-            title: "Reclutadores",
+            title: "Recruiters",
             rows: 
               reclutadores.map((name, index) => ({
                 id: String(index + 1),

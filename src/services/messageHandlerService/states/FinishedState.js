@@ -5,23 +5,24 @@ export default class FinishedState extends BaseState {
     super({ whatsappClient, sessionTracker, n8nClient, config });
   }
   async handle({ from, messageId }) {
+    const info = this.sessionTracker.getSessionData(from, ["fullName", "recruiterName", "jobPosition"]);
+    
+    const questions = ["question1", "question2", "question3", "question4", "question5"];
+    const sessionData = this.sessionTracker.getSessionData(from, questions);
+    const payload = questions.map(q => ({ [q]: sessionData[q] }));
+    console.log("📦 Final answers:", payload);
+    
     try {
-      const info = this.sessionTracker.getSessionData(from, ["fullName", "recruiterName", "jobPosition"]);
-
-      const questions = ["question1", "question2", "question3", "question4", "question5"];
-      const sessionData = this.sessionTracker.getSessionData(from, questions);
-      const payload = questions.map(q => ({ [q]: sessionData[q] }));
-      console.log("📦 Final answers:", payload);
-
       await this.requestForSaveQuestions(from, payload, info);
-
-      this.sessionTracker.removeSession(from);
-
+      console.log("✅ Datos enviados correctamente a SharePoint.");
       await this.whatsappClient.sendMessage(from, "✅ Thank you! Your responses have been saved.", messageId);
-      await this.whatsappClient.sendMessage(from, "🙌 Good luck with the process!", messageId);
     } catch (error) {
-      // console.error("❌ Error al finalizar el estado:", error);
-      throw error;
+      console.error("❌ Error al finalizar el estado:", error);
+      await this.whatsappClient.sendMessage(from, "❌ An error occurred while processing your request, please contact support to solve the issue.", messageId);
+    }
+    finally {
+      this.sessionTracker.removeSession(from);
+      await this.whatsappClient.sendMessage(from, "🙌 Good luck with the process!", messageId);
     }
 
   }

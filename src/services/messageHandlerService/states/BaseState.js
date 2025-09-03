@@ -6,8 +6,7 @@ export default class BaseState {
     this.n8nClient = n8nClient;
     this.config = config;
   }
-  
-  #Prueba
+
   async handle() {
     throw new Error("Method 'handle()' must be implemented in subclass.");
   }
@@ -46,19 +45,22 @@ export default class BaseState {
   }
 
   async setAsyncQuestionsTimeout(from) {
-    setTimeout(async () => {
+    const questionsAlert = setTimeout(async () => {
       console.log("Se envia alerta de cierre de sesion");
       await this.whatsappClient.sendMessage(from, `⏳ Your session will expire in ${this.config.REMINDER_BEFORE_TIMEOUT} minutes. Hurry up!`);
     }, (this.config.QUESTIONARY_TIMEOUT - this.config.REMINDER_BEFORE_TIMEOUT) * BaseState.ONE_MINUTE);
-    setTimeout(() => {
+    const questionsTimeout = setTimeout(() => {
       this.sessionTracker.removeSession(from);
     }, this.config.QUESTIONARY_TIMEOUT * BaseState.ONE_MINUTE);
+
+    return { questionsAlert, questionsTimeout };
   }
 
-  async setAsyncSessionTimeout(from){
-    setTimeout(async () => {
+  async setAsyncSessionTimeout(from) {
+    const sessionTimeout = setTimeout(async () => {
       await this.whatsappClient.sendMessage(from, `⏳ Your session has expired. Please start over.`);
       this.sessionTracker.removeSession(from);
     }, this.config.SESSION_LIFETIME * BaseState.ONE_MINUTE);
+    return { sessionTimeout };
   }
 }
