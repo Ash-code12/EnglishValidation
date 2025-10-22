@@ -43,7 +43,7 @@ If the use of such tools is detected, your test will be canceled and you will be
       await this.whatsappClient.sendMessage(from, "🎧 Please listen to this audio and tell us what it is about.", messageId);
 
       // Upload audio for next question
-      const audioId = await this.whatsappClient.uploadMedia(await getAudioStream("./src/assets/audios/audio1.mp3"), "audio/mp3");
+      const audioId = await this.whatsappClient.uploadMedia(await getAudioStream("./src/assets/audios/audio1ia.mp3"), "audio/mp3");
       await this.whatsappClient.sendMediaMessage(from, "audio", audioId, "");
       const { questionsAlert, questionsTimeout } = await this.setAsyncQuestionsTimeout(from);
       this.sessionTracker.updateSessionData(from, { questionsAlert, questionsTimeout });

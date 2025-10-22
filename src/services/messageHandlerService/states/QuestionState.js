@@ -11,13 +11,12 @@ export default class QuestionState extends BaseState {
   }
 
   QUESTIONS = {
-    "QUESTION_1": "./src/assets/audios/audio1.mp3",
-    "QUESTION_2": "./src/assets/audios/audio2.mp3",
-    "QUESTION_3": "./src/assets/audios/audio3.mp3",
-    "QUESTION_4": "./src/assets/audios/audio4.mp3",
-    "QUESTION_5": "./src/assets/audios/audio5.mp3"
-  };
-
+  "QUESTION_1": "./src/assets/audios/Audio1IA.mp3",
+  "QUESTION_2": "./src/assets/audios/Audio2IA.mp3",
+  "QUESTION_3": "./src/assets/audios/Audio3IA.mp3",
+  "QUESTION_4": "./src/assets/audios/Audio4IA.mp3",
+  "QUESTION_5": "./src/assets/audios/Audio5IA.mp3"
+};
   async handle({ from, message, messageId }) {
     try {
       // Validar el audio
